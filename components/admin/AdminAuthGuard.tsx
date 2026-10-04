@@ -244,8 +244,8 @@ export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps
       <div className="bg-[#080E1E] border-b border-amber-500/30 px-4 py-2 text-xs flex items-center justify-between text-slate-300">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-extrabold text-amber-400 font-mono">BrainBridge</span>
-          <span className="text-slate-400 hidden sm:inline">· Protected Admin Console</span>
+          <span className="font-extrabold text-amber-400 font-mono">/krishnacourse</span>
+          <span className="text-slate-400 hidden sm:inline">· Protected Admin Portal</span>
         </div>
 
         <div className="flex items-center gap-3">

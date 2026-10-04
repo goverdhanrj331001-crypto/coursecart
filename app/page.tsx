@@ -122,8 +122,12 @@ export default function HomePage() {
         const currentSession = getSession();
         if (view === 'student' && currentSession?.role === 'student') {
           setCurrentView('student');
-        } else if (view === 'admin') {
+        } else if (view === 'krishnacourse') {
           setCurrentView('admin');
+        } else if (view === 'admin') {
+          // Block /admin - redirect to home so nobody can guess the secret admin portal
+          setCurrentView('home');
+          window.location.hash = '/home';
         } else if (view === 'login') {
           setCurrentView('login');
         } else if (view === 'register' || view === 'signup') {
@@ -166,7 +170,7 @@ export default function HomePage() {
 
     if (newSession.role === 'owner') {
       setCurrentView('admin');
-      window.location.hash = '/admin';
+      window.location.hash = '/krishnacourse';
     } else {
       const student = findStudentByEmail(newSession.email);
       if (student) setCurrentStudent(student);
@@ -295,7 +299,11 @@ export default function HomePage() {
           currentView={currentView}
           onNavigateView={(view) => {
             setCurrentView(view);
-            window.location.hash = `/${view}`;
+            if (view === 'admin') {
+              window.location.hash = '/krishnacourse';
+            } else {
+              window.location.hash = `/${view}`;
+            }
           }}
           onOpenAuth={handleOpenAuth}
           onLogout={handleLogout}
@@ -493,7 +501,11 @@ export default function HomePage() {
           onOpenAuth={handleOpenAuth}
           onNavigateView={(view) => {
             setCurrentView(view);
-            window.location.hash = `/${view}`;
+            if (view === 'admin') {
+              window.location.hash = '/krishnacourse';
+            } else {
+              window.location.hash = `/${view}`;
+            }
           }}
         />
       )}
