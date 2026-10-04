@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0B1B3D;
+  --color-navy-dark: #071229;
+  --color-cream: #FDFBF7;
+  --color-paper: #FFFFFF;
+  --color-amber: #E9A23B;
+  --color-amber-hover: #D98E24;
+  --color-ink: #111827;
+  --color-muted: #64748B;
+  --color-line: #EBE7DF;
+  --color-green: #10B981;
+
+  --color-navy-admin: #0B132B;
+  --color-navy-admin-hover: #18233C;
+  --color-navy-admin-muted: #0B132B;
+  --color-navy-student: #0B1E3D;
+  --color-navy-student-hover: #142B52;
+  --color-cream-student: #F8F6F0;
+  --color-line-student: #E2DFD6;
+  --color-muted-student: #5B6B82;
+  --color-amber-student: #E4CD94;
+  --color-amber-student-deep: #C9A24B;
+  --color-dot-gray: #CBD5E1;
+  --color-navy-hero-hover: #182F5D;
+  --color-video-red: #FF0000;
+  --color-ink-soft: #1E2530;
+
+  --font-display: var(--font-fraunces), 'Fraunces', Georgia, serif;
+  --font-sans: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
+  --font-handwriting: var(--font-handwriting), 'Caveat', cursive;
+}
+
+:root {
+  --color-navy: #0B1B3D;
+  --color-navy-dark: #071229;
+  --color-cream: #FDFBF7;
+  --color-paper: #FFFFFF;
+  --color-amber: #E9A23B;
+  --color-amber-hover: #D98E24;
+  --color-ink: #111827;
+  --color-muted: #64748B;
+  --color-line: #EBE7DF;
+  --color-green: #10B981;
+
+  --color-navy-admin: #0B132B;
+  --color-navy-admin-hover: #18233C;
+  --color-navy-admin-muted: #0B132B;
+  --color-navy-student: #0B1E3D;
+  --color-navy-student-hover: #142B52;
+  --color-cream-student: #F8F6F0;
+  --color-line-student: #E2DFD6;
+  --color-muted-student: #5B6B82;
+  --color-amber-student: #E4CD94;
+  --color-amber-student-deep: #C9A24B;
+  --color-dot-gray: #CBD5E1;
+  --color-navy-hero-hover: #182F5D;
+  --color-video-red: #FF0000;
+  --color-ink-soft: #1E2530;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), 'Fraunces', Georgia, serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting), 'Caveat', cursive;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F4EFE6;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-dot-gray);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
