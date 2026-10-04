@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Hero } from '@/components/home/Hero';
@@ -41,6 +41,7 @@ import {
   findStudentByEmail,
   getSiteContent,
 } from '@/lib/brainbridge-data';
+import { dbGetCourses } from '@/lib/supabase-service';
 
 export default function HomePage() {
   const [session, setSessionState] = useState<SessionUser | null>(null);
@@ -61,6 +62,12 @@ export default function HomePage() {
   >('home');
   const [selectedCourseId, setSelectedCourseId] = useState<string>('web-dev');
   const [checkoutCourse, setCheckoutCourse] = useState<Course | null>(null);
+  const checkoutCourseRef = useRef<Course | null>(null);
+
+  const setCheckoutCourseWithRef = (course: Course | null) => {
+    checkoutCourseRef.current = course;
+    setCheckoutCourse(course);
+  };
 
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [siteContent, setSiteContent] = useState<SiteContent>(getSiteContent);
@@ -93,9 +100,22 @@ export default function HomePage() {
         setCurrentView('course-detail');
       } else if (hash.startsWith('#/checkout/')) {
         const cId = hash.replace('#/checkout/', '');
-        const found = getStoredCourses().find((c) => c.id === cId) || null;
-        setCheckoutCourse(found);
         setCurrentView('checkout');
+        // Agar ref mein already sahi course set hai to override mat karo
+        if (checkoutCourseRef.current?.id === cId) return;
+        // Pehle localStorage try karo (fast)
+        const localFound = getStoredCourses().find((c) => c.id === cId) || null;
+        if (localFound) {
+          setCheckoutCourseWithRef(localFound);
+        } else {
+          // Vercel/production par Supabase se fetch karo
+          dbGetCourses().then((dbC) => {
+            if (dbC) {
+              const dbFound = dbC.find((c) => c.id === cId) || null;
+              setCheckoutCourseWithRef(dbFound);
+            }
+          });
+        }
       } else if (hash === '#/checkout') {
         setCurrentView('checkout');
       } else if (hash.startsWith('#/')) {
@@ -191,7 +211,7 @@ export default function HomePage() {
   };
 
   const handleEnrollCourse = (course: Course) => {
-    setCheckoutCourse(course);
+    setCheckoutCourseWithRef(course);
     setCurrentView('checkout');
     window.location.hash = `/checkout/${course.id}`;
     if (typeof window !== 'undefined') {
