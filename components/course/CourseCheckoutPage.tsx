@@ -122,7 +122,7 @@ export function CourseCheckoutPage({
             currency: 'INR',
             name: 'BrainBridge',
             description: `Course Enrollment: ${course.name}`,
-            image: '/images/hero_indian_student_1790356905238.jpg',
+            image: '/images/hero_student.jpg',
             handler: function (response: any) {
               const paymentId = response.razorpay_payment_id || 'PAY_' + Date.now();
               setTxnId(paymentId);
@@ -263,7 +263,7 @@ export function CourseCheckoutPage({
               </div>
 
               <a
-                href={course.digitalAssetUrl || course.image || '/images/course_web_dev_1790356954573.jpg'}
+                href={course.digitalAssetUrl || course.image || '/images/course_web_dev.jpg'}
                 download={course.digitalAssetName || `${course.name}_Asset`}
                 target="_blank"
                 rel="noopener noreferrer"

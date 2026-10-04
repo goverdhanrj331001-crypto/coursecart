@@ -795,7 +795,7 @@ export const BB_SITE_DEFAULTS: SiteContent = {
     'Personalized learning for a brighter future. Get access to expert-led courses, interactive lessons, and the right support to achieve your goals.',
   contactPhone: '+91-90243-03988',
   contactEmail: 'support@brainbridge.in',
-  heroImage: '/images/hero_student_learning_1790355443709.jpg',
+  heroImage: '/images/hero_learning.jpg',
   promoVideoUrl: '',
 };
 

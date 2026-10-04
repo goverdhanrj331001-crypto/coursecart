@@ -56,7 +56,6 @@ export default function HomePage() {
     | 'profile'
     | 'student'
     | 'admin'
-    | 'krishnacourse'
     | 'terms'
     | 'privacy'
   >('home');
@@ -101,14 +100,14 @@ export default function HomePage() {
       } else if (hash.startsWith('#/checkout/')) {
         const cId = hash.replace('#/checkout/', '');
         setCurrentView('checkout');
-        // Agar ref mein already sahi course set hai to override mat karo
+        // Skip update if current course ref is already set
         if (checkoutCourseRef.current?.id === cId) return;
-        // Pehle localStorage try karo (fast)
+        // Attempt fast retrieval from local storage cache
         const localFound = getStoredCourses().find((c) => c.id === cId) || null;
         if (localFound) {
           setCheckoutCourseWithRef(localFound);
         } else {
-          // Vercel/production par Supabase se fetch karo
+          // Fallback to Supabase remote database fetch for production
           dbGetCourses().then((dbC) => {
             if (dbC) {
               const dbFound = dbC.find((c) => c.id === cId) || null;
@@ -123,7 +122,7 @@ export default function HomePage() {
         const currentSession = getSession();
         if (view === 'student' && currentSession?.role === 'student') {
           setCurrentView('student');
-        } else if (view === 'krishnacourse' || view === 'admin') {
+        } else if (view === 'admin') {
           setCurrentView('admin');
         } else if (view === 'login') {
           setCurrentView('login');
@@ -187,8 +186,6 @@ export default function HomePage() {
     setSessionState(null);
     setCurrentStudent(null);
     if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('krishna_admin_authenticated');
-      localStorage.removeItem('krishna_admin_authenticated');
       sessionStorage.removeItem('bb_session');
       localStorage.removeItem('bb_session');
       window.dispatchEvent(new Event('admin_logout'));

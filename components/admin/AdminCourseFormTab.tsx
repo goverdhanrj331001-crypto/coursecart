@@ -459,7 +459,7 @@ export function AdminCourseFormTab({
 
             <div className="space-y-2 text-xs">
               <label className="block font-bold text-slate-700">
-                YouTube Video URLs (Ek line me ek URL darj karein taaki frontend me carousel slider bane)
+                YouTube Video URLs (One URL per line for demo carousel slider)
               </label>
               <textarea
                 rows={3}

@@ -52,7 +52,7 @@ export function CtaSection({
 
             <div className="lg:col-span-5 relative h-64 lg:h-full min-h-[320px] w-full">
               <Image
-                src="/images/cta_desk_workspace_1790356932349.jpg"
+                src="/images/cta_workspace.jpg"
                 alt="Workspace with study books, laptop and coffee"
                 fill
                 className="object-cover"

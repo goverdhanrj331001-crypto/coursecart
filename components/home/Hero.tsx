@@ -115,7 +115,7 @@ export function Hero({
 
               <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
                 <Image
-                  src="/images/hero_indian_student_1790356905238.jpg"
+                  src="/images/hero_student.jpg"
                   alt="Joyful student learning with BrainBridge"
                   fill
                   className="object-cover object-top"

@@ -64,7 +64,7 @@ export function AboutSection({ onOpenVideo, onLearnMore }: AboutSectionProps) {
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-4/3 max-w-xl mx-auto group">
               <Image
-                src="/images/about_indian_learner_1790356918835.jpg"
+                src="/images/about_learner.jpg"
                 alt="Learner achieving growth with BrainBridge"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"

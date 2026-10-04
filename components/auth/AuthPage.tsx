@@ -160,7 +160,7 @@ export function AuthPage({ initialMode = 'login', onBackHome, onSuccess }: AuthP
 
           <div className="lg:col-span-6 relative min-h-[300px] lg:min-h-[620px] bg-slate-900 overflow-hidden">
             <Image
-              src="/images/hero_indian_student_1790356905238.jpg"
+              src="/images/hero_student.jpg"
               alt="BrainBridge Student"
               fill
               className="object-cover"

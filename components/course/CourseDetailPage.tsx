@@ -256,7 +256,7 @@ export function CourseDetailPage({
                     className="relative w-full h-full cursor-pointer group"
                   >
                     <Image
-                      src={course.image || '/images/course_web_dev_1790356954573.jpg'}
+                      src={course.image || '/images/course_web_dev.jpg'}
                       alt={course.name}
                       fill
                       className="object-cover group-hover:scale-103 transition-transform duration-500"
@@ -495,7 +495,7 @@ export function CourseDetailPage({
               <div className="flex items-center gap-3.5">
                 <div className="relative w-14 h-14 rounded-full overflow-hidden border border-slate-200 shrink-0">
                   <Image
-                    src={course.instructorImage || '/images/about_indian_learner_1790356918835.jpg'}
+                    src={course.instructorImage || '/images/about_learner.jpg'}
                     alt={course.faculty || 'Instructor'}
                     fill
                     className="object-cover"

@@ -297,7 +297,7 @@ export function AdminDashboard({
             .join('\n')
         : '',
       instructorTitle: c.instructorTitle || 'Full Stack Developer & Senior Mentor',
-      instructorImage: c.instructorImage || '/images/about_indian_learner_1790356918835.jpg',
+      instructorImage: c.instructorImage || '/images/about_learner.jpg',
       instructorBio:
         c.instructorBio ||
         'With 8+ years of industry experience, Surendra Saini has trained thousands of students in full stack engineering.',
@@ -356,7 +356,7 @@ export function AdminDashboard({
       rating: Number(courseForm.rating),
       reviewsCount: courseForm.reviewsCount,
       faculty: courseForm.faculty,
-      image: courseForm.image || '/images/course_web_dev_1790356954573.jpg',
+      image: courseForm.image || '/images/course_web_dev.jpg',
       modulesCount: Number(courseForm.modulesCount),
       testsCount: Number(courseForm.testsCount),
       pdfNotesCount: Number(courseForm.pdfNotesCount),
@@ -370,7 +370,7 @@ export function AdminDashboard({
       instructorImage: courseForm.instructorImage.trim(),
       instructorBio: courseForm.instructorBio.trim(),
       digitalAssetUrl:
-        courseForm.digitalAssetUrl.trim() || courseForm.image || '/images/course_web_dev_1790356954573.jpg',
+        courseForm.digitalAssetUrl.trim() || courseForm.image || '/images/course_web_dev.jpg',
       digitalAssetName:
         courseForm.digitalAssetName.trim() ||
         `${courseForm.name.replace(/\s+/g, '_')}_Digital_Content.pdf`,
@@ -498,8 +498,6 @@ export function AdminDashboard({
 
   const handleGlobalLogout = () => {
     if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('krishna_admin_authenticated');
-      localStorage.removeItem('krishna_admin_authenticated');
       sessionStorage.removeItem('bb_session');
       localStorage.removeItem('bb_session');
       window.dispatchEvent(new Event('admin_logout'));

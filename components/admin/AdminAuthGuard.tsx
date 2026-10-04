@@ -5,7 +5,13 @@ import { Shield, Lock, ArrowRight, CheckCircle2, AlertCircle, LogOut, Mail } fro
 
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
-const OWNER_PASSWORD = process.env.BB_OWNER_PASSWORD || '';
+// Whitelisted administrator emails verified via Supabase Auth
+const ALLOWED_ADMIN_EMAILS = (
+  process.env.NEXT_PUBLIC_ADMIN_EMAILS ||
+  'admin@brainbridge.in,owner@brainbridge.in,apnacollege331002@gmail.com,mukeshp789456@gmail.com'
+)
+  .split(',')
+  .map((email) => email.trim().toLowerCase());
 
 interface AdminAuthGuardProps {
   children?: React.ReactNode;
@@ -13,20 +19,42 @@ interface AdminAuthGuardProps {
 }
 
 export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return (
-        sessionStorage.getItem('krishna_admin_authenticated') === 'true' ||
-        localStorage.getItem('krishna_admin_authenticated') === 'true'
-      );
-    }
-    return false;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [checking, setChecking] = useState(true);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Verify Supabase session on mount
+  useEffect(() => {
+    const verifySession = async () => {
+      try {
+        if (!isSupabaseConfigured()) {
+          setChecking(false);
+          return;
+        }
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const userRole = session.user.user_metadata?.role;
+          const userEmail = session.user.email?.toLowerCase() || '';
+          const isAdmin =
+            userRole === 'owner' ||
+            userRole === 'admin' ||
+            ALLOWED_ADMIN_EMAILS.includes(userEmail);
+          setIsAuthenticated(isAdmin);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch {
+        setIsAuthenticated(false);
+      } finally {
+        setChecking(false);
+      }
+    };
+    verifySession();
+  }, []);
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,74 +66,53 @@ export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps
       const cleanPass = password.trim();
 
       if (!cleanEmail || !cleanPass) {
-        setErrorMsg('Kripya Email aur Password darj karein.');
-        setSubmitting(false);
+        setErrorMsg('Please enter both email and password.');
         return;
       }
 
-      if (isSupabaseConfigured()) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password: cleanPass,
-        });
+      if (!isSupabaseConfigured()) {
+        setErrorMsg('Supabase configuration is required for admin authentication.');
+        return;
+      }
 
-        if (error) {
-          setErrorMsg(`Supabase Auth Error: ${error.message}`);
-          setSubmitting(false);
-          return;
-        }
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: cleanPass,
+      });
 
-        if (data?.user) {
-          const userRole = data.user.user_metadata?.role;
-          const userEmail = data.user.email?.toLowerCase();
+      if (error) {
+        setErrorMsg('Invalid admin credentials. Please try again.');
+        return;
+      }
 
-          const isAllowedAdmin =
-            userRole === 'owner' ||
-            userRole === 'admin' ||
-            userEmail === 'apnacollege331002@gmail.com' ||
-            userEmail === 'mukeshp789456@gmail.com' ||
-            userEmail === 'owner@brainbridge.in' ||
-            userEmail === 'admin@brainbridge.in';
+      if (data?.user) {
+        const userRole = data.user.user_metadata?.role;
+        const userEmail = data.user.email?.toLowerCase() || '';
 
-          if (isAllowedAdmin) {
-            sessionStorage.setItem('krishna_admin_authenticated', 'true');
-            localStorage.setItem('krishna_admin_authenticated', 'true');
-            setIsAuthenticated(true);
-            return;
-          } else {
-            await supabase.auth.signOut();
-            setErrorMsg('Access Denied! Kevel authorized administrators hi login kar sakte hain.');
-            setSubmitting(false);
-            return;
-          }
-        }
-      } else {
-        if (
-          (cleanEmail === 'admin@brainbridge.in' && cleanPass === 'Admin@2026') ||
-          (cleanEmail === 'owner@brainbridge.in' && cleanPass === OWNER_PASSWORD) ||
-          (cleanEmail === 'admin@brainbridge.com' && cleanPass === 'admin123')
-        ) {
-          sessionStorage.setItem('krishna_admin_authenticated', 'true');
-          localStorage.setItem('krishna_admin_authenticated', 'true');
+        const isAllowedAdmin =
+          userRole === 'owner' ||
+          userRole === 'admin' ||
+          ALLOWED_ADMIN_EMAILS.includes(userEmail);
+
+        if (isAllowedAdmin) {
           setIsAuthenticated(true);
-          return;
         } else {
-          setErrorMsg('Galat Admin Email ya Password! Kripya sahi credentials darj karein.');
-          setSubmitting(false);
-          return;
+          await supabase.auth.signOut();
+          setErrorMsg('Access denied: Unauthorized administrator account.');
         }
       }
-    } catch (err: any) {
-      setErrorMsg(err?.message || 'Authentication error. Please try again.');
+    } catch (err: unknown) {
+      setErrorMsg('Authentication error. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
   useEffect(() => {
-    const handleLogoutEvent = () => {
-      sessionStorage.removeItem('krishna_admin_authenticated');
-      localStorage.removeItem('krishna_admin_authenticated');
+    const handleLogoutEvent = async () => {
+      if (isSupabaseConfigured()) {
+        await supabase.auth.signOut();
+      }
       setIsAuthenticated(false);
     };
     window.addEventListener('admin_logout', handleLogoutEvent);
@@ -119,10 +126,6 @@ export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps
       }
     } catch {
     }
-    sessionStorage.removeItem('krishna_admin_authenticated');
-    localStorage.removeItem('krishna_admin_authenticated');
-    sessionStorage.removeItem('bb_session');
-    localStorage.removeItem('bb_session');
     setIsAuthenticated(false);
     if (onNavigateHome) {
       onNavigateHome();
@@ -130,6 +133,18 @@ export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps
       window.location.href = '/';
     }
   };
+
+  // Verifying session state - show loading indicator
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-navy-admin flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
+          <p className="text-slate-400 text-sm">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -229,8 +244,8 @@ export function AdminAuthGuard({ children, onNavigateHome }: AdminAuthGuardProps
       <div className="bg-[#080E1E] border-b border-amber-500/30 px-4 py-2 text-xs flex items-center justify-between text-slate-300">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-extrabold text-amber-400 font-mono">/krishnacourse</span>
-          <span className="text-slate-400 hidden sm:inline">· Protected Admin Portal</span>
+          <span className="font-extrabold text-amber-400 font-mono">BrainBridge</span>
+          <span className="text-slate-400 hidden sm:inline">· Protected Admin Console</span>
         </div>
 
         <div className="flex items-center gap-3">

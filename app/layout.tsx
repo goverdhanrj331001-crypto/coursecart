@@ -54,30 +54,6 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${caveat.variable} scroll-smooth`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var target = window;
-                  var proto = Object.getPrototypeOf(window);
-                  var desc = Object.getOwnPropertyDescriptor(target, 'fetch') || Object.getOwnPropertyDescriptor(proto, 'fetch');
-                  if (desc && (!desc.set || !desc.writable)) {
-                    var currentFetch = window.fetch;
-                    Object.defineProperty(window, 'fetch', {
-                      get: function() { return currentFetch; },
-                      set: function(val) { currentFetch = val; },
-                      configurable: true,
-                      enumerable: true
-                    });
-                  }
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
       <body
         suppressHydrationWarning
         className="min-h-screen bg-cream text-ink-soft antialiased selection:bg-amber/20 selection:text-navy"

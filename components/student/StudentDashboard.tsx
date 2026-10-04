@@ -186,7 +186,7 @@ export function StudentDashboard({
                         </div>
 
                         <a
-                          href={course?.digitalAssetUrl || course?.image || '/images/course_web_dev_1790356954573.jpg'}
+                          href={course?.digitalAssetUrl || course?.image || '/images/course_web_dev.jpg'}
                           download={course?.digitalAssetName || `${course?.name}_Digital_Asset`}
                           target="_blank"
                           rel="noopener noreferrer"
